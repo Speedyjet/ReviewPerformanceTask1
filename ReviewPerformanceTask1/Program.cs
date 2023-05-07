@@ -9,16 +9,15 @@ public class MyClass
     public string GeneratePasswordHashUsingSalt(string passwordText, byte[] salt)
 
     {
-
-
-
+        if (string.IsNullOrEmpty(passwordText) || salt == null)
+        {
+            return null;
+        }
         var iterate = 10000;
 
-        var pbkdf2 = new Rfc2898DeriveBytes(passwordText, salt, iterate);
+        using var pbkdf2 = new Rfc2898DeriveBytes(passwordText, salt, iterate);
 
         byte[] hash = pbkdf2.GetBytes(20);
-
-
 
         byte[] hashBytes = new byte[36];
 
@@ -26,11 +25,7 @@ public class MyClass
 
         Array.Copy(hash, 0, hashBytes, 16, 20);
 
-
-
         var passwordHash = Convert.ToBase64String(hashBytes);
-
-
 
         return passwordHash;
 
