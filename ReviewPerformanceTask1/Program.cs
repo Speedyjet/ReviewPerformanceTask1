@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Diagnostics;
+using System.Security.Cryptography;
 public class MyClass
 {
     public static void Main()
@@ -20,16 +21,21 @@ public class MyClass
         byte[] hash = pbkdf2.GetBytes(20);
 
         byte[] hashBytes = new byte[36];
+        try
+        {
+            Array.Copy(salt, 0, hashBytes, 0, 16);
 
-        Array.Copy(salt, 0, hashBytes, 0, 16);
+            Array.Copy(hash, 0, hashBytes, 16, 20);
+        }
+        catch (Exception)
+        {
 
-        Array.Copy(hash, 0, hashBytes, 16, 20);
+            throw;
+        }
 
         var passwordHash = Convert.ToBase64String(hashBytes);
 
         return passwordHash;
-
-
 
     }
 }
